@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hwk8s-nginx-pod
+  namespace: hwk8s-ns
+  labels:
+    app: hwk8s-app
+spec:
+  containers:
+  - name: hwk8s-nginx-pod
+    image: nginx:alpine
+    ports:
+    - protocol: TCP
+      containerPort: 80

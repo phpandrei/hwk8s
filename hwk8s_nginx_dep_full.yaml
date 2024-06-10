@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hwk8s-nginx-dep
+  namespace: hwk8s-ns
+  labels:
+    app: hwk8s-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hwk8s-nginx
+  template:
+    metadata:
+      labels:
+        app: hwk8s-nginx
+    spec:
+      volumes:
+        - name: hwk8s-pvc-v
+          persistentVolumeClaim:
+            claimName: hwk8s-local-pvc
+        - name: hwk8s-nginx-cv
+          configMap:
+            name: hwk8s-nginx-c
+      containers:
+        - name: hwk8s-nginx-pod
+          image: nginx:alpine
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "250m"
+            limits:
+              memory: "200Mi"
+              cpu: "500m"
+          volumeMounts:
+            - name: hwk8s-pvc-v
+              mountPath: /var/www/html
+            - name: hwk8s-nginx-cv
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+          ports:
+          - protocol: TCP
+            containerPort: 80
