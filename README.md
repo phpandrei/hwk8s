@@ -112,3 +112,5 @@ http://localhost:5000/v2/_catalog
 ```microk8s kubectl exec -n hwk8s-ns -c hwk8s-gogo-pod pods/hwk8s-gogo-dep-569df99f6b-qcw4b -- "go run main.go"```
 
 ## LENS
+
+ИДЕ по сути
