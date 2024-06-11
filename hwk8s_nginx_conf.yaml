@@ -1,0 +1,31 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: hwk8s-nginx-c
+  namespace: hwk8s-ns
+data:
+  nginx.conf: |
+    events {
+    }
+    http {
+      server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+        error_log  /var/www/html/log/nginx/error.log;
+        access_log /var/www/html/log/nginx/access.log;
+        root /var/www/html;        
+        index index.php;
+        location / {
+          try_files $uri $uri/ /index.php?$query_string;
+        }
+        location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass hwk8s-phpfpm-s:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        }
+      }
+    }

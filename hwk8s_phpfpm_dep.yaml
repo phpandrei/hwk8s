@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hwk8s-phpfpm-s
+  namespace: hwk8s-ns
+spec:  
+  selector:
+    app: hwk8s-phpfpm # название app php
+  ports:
+    - protocol: TCP
+      port: 9000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hwk8s-phpfpm-dep
+  namespace: hwk8s-ns
+  labels:
+    app: hwk8s-phpfpm
+spec:
+  replicas: 1
+  # selector — это способ для репликасета понять, какие поды
+  # из числа уже существующих в кластере относятся к нему. Поскольку
+  # мы прописали в шаблоне выше лейбл app: hwk8s-phpfpm, мы точно
+  # знаем, что все поды с таким лейблом порождены этим репликасетом.
+  # Репликасет будет пользоваться этим селектором, чтобы понять,
+  # сколько он уже насоздавал подов и сколько ещё нужно, чтобы 
+  # добиться количества реплик, указанного выше в поле replicas.
+  selector:
+    matchLabels:
+      app: hwk8s-phpfpm
+  template:
+    metadata:
+      labels:
+        app: hwk8s-phpfpm
+    spec:
+      volumes:
+        - name: hwk8s-pvc-v
+          persistentVolumeClaim:
+            claimName: hwk8s-local-pvc
+      containers:
+        - name: hwk8s-phpfpm-pod
+          #image: php:7.2-fpm
+          image: localhost:5000/php_pg_v1
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "250m"
+            limits:
+              memory: "200Mi"
+              cpu: "500m"
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: hwk8s-db-secret
+                  key: dbname
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: hwk8s-db-secret
+                  key: user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: hwk8s-db-secret
+                  key: password
+            - name: POSTGRES_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: hwk8s-db-secret
+                  key: port
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: hwk8s-db-secret
+                  key: host
+          volumeMounts:
+            - name: hwk8s-pvc-v
+              mountPath: /var/www/html
