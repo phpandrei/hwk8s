@@ -114,3 +114,45 @@ http://localhost:5000/v2/_catalog
 ## LENS
 
 ИДЕ по сути
+
+## job & cronJob
+
+видел такое для kind: Deployment :
+
+spec:
+      containers:
+        - name: queue-worker
+          image: [your_registry_url]/cli:v0.0.1
+          command:
+            - php
+          args:
+            - artisan
+            - queue:work
+            - --queue=default
+            - --max-jobs=200
+
+и такое
+
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cron
+  namespace: my-laravel-app
+spec:
+  concurrencyPolicy: Replace
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - image: my_laravel_app_image:latest
+            name: cron
+            command: ["php", "artisan", "schedule:run"]
+            imagePullPolicy: Always
+            envFrom:
+            - configMapRef:
+                name: laravel-app-config
+            - secretRef:
+                name: laravel-app-secret
+          restartPolicy: Never
