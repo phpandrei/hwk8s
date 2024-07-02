@@ -92,6 +92,7 @@ http://localhost:5000/v2/_catalog
 в браузере http://127.0.0.1:8080/test?abc=444444&cde=5555
 
 ```sudo docker tag my-gogo-app_v1 localhost:5000/my-gogo-app```
+
 ```sudo docker push localhost:5000/my-gogo-app```
 
 ```microk8s kubectl apply -f hwk8s_gogo_ms.yaml```
@@ -99,26 +100,31 @@ http://localhost:5000/v2/_catalog
 ## компилятор GO
 
 ```microk8s kubectl apply -f hwk8s_gogo_dep.yaml```
+
 ```microk8s kubectl delete -f hwk8s_gogo_dep.yaml```
-
-
-microk8s kubectl apply -f hwk8s_gogo_test_dep_correct.yaml
-microk8s kubectl delete -f hwk8s_gogo_test_dep_correct.yaml
 
 ## логи и дебаг. ну и про ресурсы
 
 ```microk8s kubectl describe deployment -n hwk8s-ns hwk8s-gogo-dep```
+
 ```microk8s kubectl describe pod -n hwk8s-ns hwk8s-gogo-dep-65f4cbd447-q9457```
+
 ```microk8s kubectl logs -n hwk8s-ns hwk8s-gogo-dep-65f4cbd447-q9457```
 
 ```microk8s kubectl debug -it --image=golang:latest -n hwk8s-ns hwk8s-gogo-dep-696fd8d86c-n7fp5```
+
 в контейнер      ```microk8s kubectl exec -it -n hwk8s-ns -c hwk8s-gogo-pod pods/hwk8s-gogo-dep-758f9847dc-tczrd -- bash```
+
 старт правильный ```microk8s kubectl exec -it -n hwk8s-ns -c hwk8s-gogo-pod pods/hwk8s-gogo-dep-758f9847dc-tczrd -- go run tmp/src/server.go```
+
 старт            ```microk8s kubectl exec -n hwk8s-ns -c hwk8s-gogo-pod pods/hwk8s-gogo-dep-758f9847dc-tczrd -- go run tmp/src/server.go```
+
 потроха          ```microk8s kubectl exec -n hwk8s-ns -c hwk8s-gogo-pod pods/hwk8s-gogo-dep-758f9847dc-tczrd -- gofmt tmp/src/server.go```
 
 
+
 процессы в поде ```microk8s kubectl exec -n hwk8s-ns -c hwk8s-gogo-pod pods/hwk8s-gogo-dep-758f9847dc-tczrd -- ps axu```
+
 убийство...     ```microk8s kubectl exec -n hwk8s-ns -c hwk8s-gogo-pod pods/hwk8s-gogo-dep-758f9847dc-tczrd -- kill 1933```
 
 Ограничть компилятор в ресурсах - плохая идея :)
