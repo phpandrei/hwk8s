@@ -31,13 +31,13 @@ spec:
               cpu: "250m"
             limits:
               memory: "200Mi"
-              cpu: "500m"      
+              cpu: "500m"
           volumeMounts:
             - name: hwk8s-pvc-v
-              mountPath: /var/www/html       
+              mountPath: /var/www/html
             - name: hwk8s-nginx-cv
               mountPath: /etc/nginx/nginx.conf
-              subPath: nginx.conf   
+              subPath: nginx.conf
           ports:
           - protocol: TCP
             containerPort: 80

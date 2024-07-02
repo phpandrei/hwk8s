@@ -40,14 +40,40 @@ spec:
             claimName: hwk8s-local-pvc
       containers:
         - name: hwk8s-phpfpm-pod
-          image: php:7.2-fpm          
+          image: localhost:5000/php_pg_v1
           resources:
             requests:
               memory: "100Mi"
               cpu: "250m"
             limits:
               memory: "200Mi"
-              cpu: "500m"          
+              cpu: "500m"
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: hwk8s-db-secret
+                  key: dbname
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: hwk8s-db-secret
+                  key: user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: hwk8s-db-secret
+                  key: password
+            - name: POSTGRES_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: hwk8s-db-secret
+                  key: port
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: hwk8s-db-secret
+                  key: host
           volumeMounts:
             - name: hwk8s-pvc-v
               mountPath: /var/www/html

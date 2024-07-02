@@ -6,7 +6,7 @@ $dbconn = pg_connect("host=hwk8s-db-s port=5432 dbname=test user=postgres passwo
 or die('Не удалось соединиться: ' . pg_last_error());
 
 // Выполнение SQL-запроса
-$query = 'SELECT * FROM table_k8s';
+$query = 'SELECT * FROM k8s_table';
 $result = pg_query($query) or die('Ошибка запроса: ' . pg_last_error());
 
 // Вывод результатов в HTML

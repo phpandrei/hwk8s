@@ -5,14 +5,14 @@ metadata:
   namespace: hwk8s-ns
 spec:
   capacity:
-    storage: 5Gi 
+    storage: 5Gi
   hostPath: #укажем путь до локальной папки
     path: >-
       /media/akozlov/06b9b68a-882f-4f94-ad63-4c9e75de88f35/projects/hwandk8s/hwk8s-gogo-volume
     type: DirectoryOrCreate #если нет папки то создадим
   accessModes:
     - ReadWriteMany
-  volumeMode: Filesystem    
+  volumeMode: Filesystem
   storageClassName: local-storage
 ---
 apiVersion: v1
@@ -39,7 +39,7 @@ spec:
   selector:
     app: hwk8s-gogo
   ports:
-    - port: 80
+    - port: 8080
       nodePort: 30056 #для внешнего подключения
 ---
 apiVersion: apps/v1
@@ -65,16 +65,9 @@ spec:
             claimName: hwk8s-gogo-pvc
       containers:
         - name: hwk8s-gogo-pod
-          image: golang:latest                                  
+          image: golang:latest          
           ports:
-          - containerPort: 80          
+          - containerPort: 8080
           volumeMounts:
             - name: hwk8s-gogo-pvc-v
               mountPath: /go/tmp/src
-          resources:
-            requests:
-              memory: 1Gi
-              cpu: 250m
-            limits:
-              memory: 1Gi
-              cpu: 250m          

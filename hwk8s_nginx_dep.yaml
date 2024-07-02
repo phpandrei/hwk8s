@@ -6,7 +6,9 @@ metadata:
   labels:
     app: hwk8s-nginx
 spec:
-  replicas: 1
+  replicas: 2
+  #это необязательное поле, которое определяет селектор меток для подов, предназначенных для этого развертывания.
+  #В таком случае, .spec.selector должен соответствовать значению .spec.template.metadata.labels
   selector:
     matchLabels:
       app: hwk8s-nginx
